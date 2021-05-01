@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React from 'react'
 
 class Home extends React.Component {
@@ -5,6 +6,18 @@ class Home extends React.Component {
     state = {
         balance: 0
     }
+
+    componentDidMount() {
+        const user = JSON.parse(localStorage.getItem('_userId'))
+        
+        axios.get(`http://localhost:8080/api/users/${user.id}/balance`)
+            .then( response => {
+                this.setState({ balance: response.data })
+            }).catch( error => {
+                console.log(error.response)
+            })
+    }
+
     render() {
         return (
             <div className="jumbotron">
