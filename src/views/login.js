@@ -4,6 +4,8 @@ import FormGroup from '../components/form-group'
 import { withRouter } from 'react-router-dom'
 import UserService from '../app/service/user-service'
 import LocalStorageService from '../app/service/local-storage-service'
+import { messageError } from '../components/toast'
+import { ToastContainer } from 'react-toastify'
 
 class Login extends React.Component {
 
@@ -16,8 +18,7 @@ class Login extends React.Component {
 
     state = {
         email: '',
-        password: '',
-        messageError: null
+        password: ''
     }
     
     login = () => {
@@ -28,7 +29,7 @@ class Login extends React.Component {
             LocalStorageService.addItem('_user', response.data)
             this.props.history.push('/home')
         }).catch( error => {
-            this.setState({ messageError: error.response.data })
+            messageError(error.response.data)
         })
     }
 
@@ -43,9 +44,7 @@ class Login extends React.Component {
                 <div className="col-md-6" style={{ position: 'relative', left: '300px' }}>
                     <div className="bs-docs-section">
                         <Card title="Login">
-                            <div className="row">
-                                <span>{ this.state.messageError }</span>
-                            </div>
+                            <ToastContainer/>
                             <div className="row">
                                 <div className="col-lg-12">
                                     <div className="bs-component">

@@ -1,8 +1,11 @@
 import React from 'react';
-import 'bootswatch/dist/flatly/bootstrap.css'
 import Routes from './routes'
-import '../custom.css'
 import NavBar from '../components/nav-bar';
+
+//css
+import '../custom.css';
+import 'react-toastify/dist/ReactToastify.css';
+import 'bootswatch/dist/flatly/bootstrap.css';
 
 class App extends React.Component {
 
