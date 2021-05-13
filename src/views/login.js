@@ -5,7 +5,6 @@ import { withRouter } from 'react-router-dom'
 import UserService from '../app/service/user-service'
 import LocalStorageService from '../app/service/local-storage-service'
 import { messageError } from '../components/toast'
-import { ToastContainer } from 'react-toastify'
 
 class Login extends React.Component {
 
@@ -14,21 +13,19 @@ class Login extends React.Component {
         this.service = new UserService()
     }
 
-    
-
     state = {
         email: '',
         password: ''
     }
-    
+
     login = () => {
         this.service.authenticate({
             email: this.state.email,
             password: this.state.password
-        }).then( response => {
+        }).then(response => {
             LocalStorageService.addItem('_user', response.data)
             this.props.history.push('/home')
-        }).catch( error => {
+        }).catch(error => {
             messageError(error.response.data)
         })
     }
@@ -44,7 +41,6 @@ class Login extends React.Component {
                 <div className="col-md-6" style={{ position: 'relative', left: '300px' }}>
                     <div className="bs-docs-section">
                         <Card title="Login">
-                            <ToastContainer/>
                             <div className="row">
                                 <div className="col-lg-12">
                                     <div className="bs-component">
@@ -66,8 +62,8 @@ class Login extends React.Component {
                                                     id="exampleInputPassword1"
                                                     placeholder="Password" />
                                             </FormGroup>
-                                            <button onClick={ this.login } className="btn btn-success">Entrar</button>
-                                            <button className="btn btn-danger" onClick={ this.signup }>Cadastrar</button>
+                                            <button onClick={this.login} className="btn btn-success">Entrar</button>
+                                            <button className="btn btn-danger" onClick={this.signup}>Cadastrar</button>
                                         </fieldset>
                                     </div>
                                 </div>
@@ -81,4 +77,4 @@ class Login extends React.Component {
     }
 }
 
-export default withRouter (Login)
+export default withRouter(Login)

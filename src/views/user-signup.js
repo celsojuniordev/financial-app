@@ -2,8 +2,15 @@ import React from 'react'
 import Card from '../components/card'
 import FormGroup from '../components/form-group'
 import { withRouter } from 'react-router-dom'
+import UserService from '../app/service/user-service'
+import { messageSuccess, messageError } from '../components/toast'
 
 class UserSignup extends React.Component {
+
+    constructor() {
+        super()
+        this.service = new UserService()
+    }
 
     state = {
         name: '',
@@ -12,8 +19,55 @@ class UserSignup extends React.Component {
         confirmPassword: ''
     }
 
-    save = () => {
-        console.log(this.state)
+
+    validate() {
+        const msg = []
+
+        if(!this.state.name) {
+            msg.push('Nome é obrigatório')
+        }
+
+        if(!this.state.email) {
+            msg.push('Email é obrigatório')
+        } else if(!this.state.email.match(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]/)) {
+            msg.push('Email inválido')
+        }
+
+        if(!this.state.password || !this.state.confirmPassword) {
+            msg.push('Senha é obrigatório')
+        } else if(this.state.password !== this.state.confirmPassword) {
+            msg.push('Confirmação de senha inválido')
+        }
+
+        return msg
+    }
+
+
+    signup = () => {
+        const msgs = this.validate()
+
+        if(msgs.length > 0) {
+            msgs.forEach ( (msg, index) => {
+                messageError(msg)
+            })
+
+            return false
+        }
+
+        const user = {
+            email: this.state.email,
+            name: this.state.name,
+            password: this.state.password
+        }
+
+        this.service.signup(user)
+            .then(response => {
+                messageSuccess('Usuário cadastrado com sucesso!')
+                this.props.history.push('/login')
+            })
+            .catch(error => {
+                messageError(error.response.data)
+            })
     }
 
     cancel = () => {
@@ -38,7 +92,7 @@ class UserSignup extends React.Component {
                             <FormGroup label="Confirmar senha: *" htmlFor="inputConfirmPassword">
                                 <input className="form-control" type="password" id="inputConfirmPassword" name="confirmPassword" onChange={e => this.setState({ confirmPassword: e.target.value })} />
                             </FormGroup>
-                            <button onClick={this.save} className="btn btn-success">Salvar</button>
+                            <button onClick={this.signup} className="btn btn-success">Salvar</button>
                             <button onClick={this.cancel} className="btn btn-danger">Cancelar</button>
                         </div>
                     </div>
