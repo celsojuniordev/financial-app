@@ -1,39 +1,52 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
+import LaunchService from '../../app/service/launch-service'
 import Card from '../../components/card'
 import FormGroup from '../../components/form-group'
 import SelectMenu from '../../components/select-menu'
 import LaunchTable from './launch-table'
+import LocalStorageService from '../../app/service/local-storage-service'
 
 class LaunchSearch extends React.Component {
 
+    constructor() {
+        super()
+        this.service = new LaunchService()
+    }
+
+    state = {
+        year: '',
+        month: '',
+        type: '',
+        description: '',
+        launchs: []
+    }
+
+    search = () => {
+        const user = LocalStorageService.getItem('_user')
+
+        const launchFilter = {
+            year: this.state.year,
+            month: this.state.month,
+            type: this.state.type,
+            description: this.state.description,
+            userId: user.id
+        }
+
+        this.service.search(launchFilter)
+            .then( response => {
+                this.setState({launchs: response.data})
+            }).catch( error => {
+                console.log(error.data)
+            })
+        
+        console.log(this.state)
+    }
+
     render() {
 
-        const month = [
-            { label: 'Selecione', value: '' },
-            { label: 'Janeiro', value: 1 },
-            { label: 'Fevereiro', value: 2 },
-            { label: 'Março', value: 3 },
-            { label: 'Abril', value: 4 },
-            { label: 'Maio', value: 5 },
-            { label: 'Junho', value: 6 },
-            { label: 'Julho', value: 7 },
-            { label: 'Agosto', value: 8 },
-            { label: 'Setembro', value: 9 },
-            { label: 'Outubro', value: 10 },
-            { label: 'Novembro', value: 11 },
-            { label: 'Dezembro', value: 12 },
-        ]
-
-        const launchType = [
-            { label: 'Selecione', value: '' },
-            { label: 'Receita', value: 'RECEITA' },
-            { label: 'Despesa', value: 'DESPESA' },
-        ]
-
-        const launch = [
-            {id: 1, description: 'Salario', value: 1000, month: 1, type: 'Receita', status: 'EFETIVADO'}
-        ]
+        const month = this.service.getMonths()
+        const launchType = this.service.getTypes()
 
         return (
             <Card title="Consulta lançamentos">
@@ -44,17 +57,35 @@ class LaunchSearch extends React.Component {
                                 <input type="text"
                                     className="form-control"
                                     id="inputYear"
+                                    value={this.state.year}
+                                    onChange={e => this.setState({ year: e.target.value })}
                                     aria-describedby="emailHelp"
                                     placeholder="Digite o Ano" />
                             </FormGroup>
-                            <FormGroup label="Mês: *" htmlFor="inputMonth">
-                                <SelectMenu id="inputMonth" className="form-control" list={month} />
+                            <FormGroup label="Mês: " htmlFor="inputMonth">
+                                <SelectMenu id="inputMonth"
+                                    className="form-control"
+                                    list={month}
+                                    value={this.state.month}
+                                    onChange={e => this.setState({ month: e.target.value })} />
                             </FormGroup>
-                            <FormGroup label="Tipo: *" htmlFor="inputType">
-                                <SelectMenu id="inputType" className="form-control" list={launchType} />
+                            <FormGroup label="Descrição: " htmlFor="inputDescription">
+                                <input type="text"
+                                    className="form-control"
+                                    id="inputDescription"
+                                    value={this.state.description}
+                                    onChange={e => this.setState({ description: e.target.value })}
+                                    placeholder="Digite a descrição" />
+                            </FormGroup>
+                            <FormGroup label="Tipo: " htmlFor="inputType">
+                                <SelectMenu id="inputType"
+                                    className="form-control"
+                                    list={launchType}
+                                    value={this.state.type}
+                                    onChange={e => this.setState({ type: e.target.value })} />
                             </FormGroup>
 
-                            <button type="button" className="btn btn-success">Buscar</button>
+                            <button onClick={this.search} type="button" className="btn btn-success">Buscar</button>
                             <button type="button" className="btn btn-danger">Cadastrar</button>
 
                         </div>
@@ -64,7 +95,7 @@ class LaunchSearch extends React.Component {
                 <div className="row">
                     <div className="col-md-12">
                         <div className="bs-component">
-                            <LaunchTable launchs={launch}/>
+                            <LaunchTable launchs={this.state.launchs} />
                         </div>
                     </div>
                 </div>
