@@ -1,4 +1,5 @@
 import React from 'react'
+import currency from 'currency-formatter'
 
 export default props => {
 
@@ -6,7 +7,7 @@ const rows = props.launchs.map(launch => {
     return (
         <tr key={ launch.id }>
             <td>{ launch.description }</td>
-            <td>{ launch.value }</td>
+            <td>{ currency.format(launch.value, { locale: 'pt-BR' }) }</td>
             <td>{ launch.type }</td>
             <td>{ launch.month }</td>
             <td>{ launch.status }</td>
