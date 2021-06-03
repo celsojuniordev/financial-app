@@ -7,6 +7,8 @@ import SelectMenu from '../../components/select-menu'
 import LaunchTable from './launch-table'
 import LocalStorageService from '../../app/service/local-storage-service'
 import * as messages from '../../components/toast'
+import { Dialog } from 'primereact/dialog'
+import { Button } from 'primereact/button'
 
 class LaunchSearch extends React.Component {
 
@@ -20,6 +22,8 @@ class LaunchSearch extends React.Component {
         month: '',
         type: '',
         description: '',
+        showConfirmDialog: false,
+        launchDeleted: {},
         launchs: []
     }
 
@@ -50,23 +54,40 @@ class LaunchSearch extends React.Component {
         console.log("Edit ", id)
     }
 
-    delete = (launch) => {
-        this.service.deleteLaunch(launch.id)
+    delete = () => {
+        this.service.deleteLaunch(this.state.launchDeleted.id)
             .then(response => {
                 const launchs = this.state.launchs
-                const index = launchs.indexOf(launch)
+                const index = launchs.indexOf(this.state.launchDeleted)
                 launchs.splice(index, 1)
                 this.setState(launchs)
+                this.setState({showConfirmDialog: false, launchDeleted: {}})
+
                 messages.messageSuccess("Deletado com sucesso")
             }).catch(error => {
                 messages.messageError(error.data)
             })
     }
 
+    confirm = (launch) => {
+        this.setState({showConfirmDialog: true, launchDeleted: launch})
+    }
+
+    cancelDelete = () => {
+        this.setState({showConfirmDialog: false, launchDeleted: {}})
+    }
+
     render() {
 
         const month = this.service.getMonths()
         const launchType = this.service.getTypes()
+
+        const confirmDialogFooter = (
+            <div>
+                <Button label="Sim" icon="pi pi-check" onClick={this.delete} />
+                <Button label="Não" icon="pi pi-times" onClick={this.cancelDelete} />
+            </div>
+        )
 
         return (
             <Card title="Consulta lançamentos">
@@ -115,9 +136,19 @@ class LaunchSearch extends React.Component {
                 <div className="row">
                     <div className="col-md-12">
                         <div className="bs-component">
-                            <LaunchTable launchs={this.state.launchs} delete={this.delete} edit={this.edit} />
+                            <LaunchTable launchs={this.state.launchs} delete={this.confirm} edit={this.edit} />
                         </div>
                     </div>
+                </div>
+                <div>
+                    <Dialog header="Confirmar" 
+                            visible={this.state.showConfirmDialog}
+                            modal={true} 
+                            footer={confirmDialogFooter}
+                            style={{ width: '50vw' }} 
+                            onHide={() => this.setState({showConfirmDialog: false})}>
+                        <p>Esta ação é irreversível. Deseja continuar ? </p>
+                    </Dialog>
                 </div>
             </Card>
         )
