@@ -6,6 +6,7 @@ import FormGroup from '../../components/form-group'
 import SelectMenu from '../../components/select-menu'
 import LaunchTable from './launch-table'
 import LocalStorageService from '../../app/service/local-storage-service'
+import * as messages from '../../components/toast'
 
 class LaunchSearch extends React.Component {
 
@@ -23,6 +24,10 @@ class LaunchSearch extends React.Component {
     }
 
     search = () => {
+        if (!this.state.year) {
+            messages.messageError('Ano é obrigatório')
+            return false
+        }
         const user = LocalStorageService.getItem('_user')
 
         const launchFilter = {
@@ -34,13 +39,28 @@ class LaunchSearch extends React.Component {
         }
 
         this.service.search(launchFilter)
-            .then( response => {
-                this.setState({launchs: response.data})
-            }).catch( error => {
-                console.log(error.data)
+            .then(response => {
+                this.setState({ launchs: response.data })
+            }).catch(error => {
+                messages.messageError(error.data)
             })
-        
-        console.log(this.state)
+    }
+
+    edit = (id) => {
+        console.log("Edit ", id)
+    }
+
+    delete = (launch) => {
+        this.service.deleteLaunch(launch.id)
+            .then(response => {
+                const launchs = this.state.launchs
+                const index = launchs.indexOf(launch)
+                launchs.splice(index, 1)
+                this.setState(launchs)
+                messages.messageSuccess("Deletado com sucesso")
+            }).catch(error => {
+                messages.messageError(error.data)
+            })
     }
 
     render() {
@@ -95,7 +115,7 @@ class LaunchSearch extends React.Component {
                 <div className="row">
                     <div className="col-md-12">
                         <div className="bs-component">
-                            <LaunchTable launchs={this.state.launchs} />
+                            <LaunchTable launchs={this.state.launchs} delete={this.delete} edit={this.edit} />
                         </div>
                     </div>
                 </div>

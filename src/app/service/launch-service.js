@@ -26,6 +26,10 @@ class LaunchService extends ApiService {
         return this.get(params)
     }
 
+    deleteLaunch(id) {
+        return this.delete(`/${id}`)
+    }
+
     getMonths() {
         return [
             { label: 'Selecione', value: '' },
