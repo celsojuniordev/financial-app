@@ -77,6 +77,10 @@ class LaunchSearch extends React.Component {
         this.setState({showConfirmDialog: false, launchDeleted: {}})
     }
 
+    form = () => {
+        this.props.history.push('/launch-register')
+    }
+
     render() {
 
         const month = this.service.getMonths()
@@ -127,7 +131,7 @@ class LaunchSearch extends React.Component {
                             </FormGroup>
 
                             <button onClick={this.search} type="button" className="btn btn-success">Buscar</button>
-                            <button type="button" className="btn btn-danger">Cadastrar</button>
+                            <button onClick={this.form} type="button" className="btn btn-danger">Cadastrar</button>
 
                         </div>
                     </div>

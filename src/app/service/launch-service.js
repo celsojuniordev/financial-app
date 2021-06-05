@@ -7,6 +7,10 @@ class LaunchService extends ApiService {
         super('/launchs')
     }
 
+    save(Launch) {
+        return this.post('/', Launch)
+    }
+
     search(LaunchFilter) {
         let params = `?year=${LaunchFilter.year}`
 

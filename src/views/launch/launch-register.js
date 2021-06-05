@@ -4,6 +4,8 @@ import LaunchService from '../../app/service/launch-service'
 import Card from '../../components/card'
 import FormGroup from '../../components/form-group'
 import SelectMenu from '../../components/select-menu'
+import { messageError, messageSuccess } from '../../components/toast'
+import LocalStorageService from '../../app/service/local-storage-service'
 
 class LaunchRegister extends React.Component {
 
@@ -31,6 +33,19 @@ class LaunchRegister extends React.Component {
     }
 
     save = () => {
+        const loggedUser = LocalStorageService.getItem('_user')
+        const { description, value, month, year, type } = this.state
+        const launch = { description, value, month, year, type, userId: loggedUser.id }
+
+        this.service.save(launch)
+            .then(response => {
+                messageSuccess('Cadastrado com sucesso')
+                this.props.history.push('/launch-search')
+
+            })
+            .catch(error => {
+                messageError(error.response.data)
+            })
         console.log(this.state)
     }
 
@@ -112,7 +127,7 @@ class LaunchRegister extends React.Component {
                 <div className="row">
                     <div>
                         <button className="btn btn-success" onClick={this.save} >Salvar</button>
-                        <button className="btn btn-danger" >Cancelar</button>
+                        <button className="btn btn-danger" onClick={e => this.props.history.push('/launch-search')} >Cancelar</button>
                     </div>
 
                 </div>
