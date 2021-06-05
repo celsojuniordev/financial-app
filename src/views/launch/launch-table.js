@@ -13,7 +13,7 @@ const rows = props.launchs.map(launch => {
             <td>{ launch.status }</td>
             <td>
                 
-            <button onClick={e => props.edit(launch)} type="button" className="btn btn-primary">Editar</button>
+            <button onClick={e => props.edit(launch.id)} type="button" className="btn btn-primary">Editar</button>
             <button onClick={e => props.delete(launch)} type="button" className="btn btn-danger">Deletar</button>
 
             </td>

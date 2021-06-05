@@ -51,7 +51,7 @@ class LaunchSearch extends React.Component {
     }
 
     edit = (id) => {
-        console.log("Edit ", id)
+        this.props.history.push(`/launch-register/${id}`)
     }
 
     delete = () => {

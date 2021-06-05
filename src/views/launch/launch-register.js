@@ -25,6 +25,18 @@ class LaunchRegister extends React.Component {
         status: ''
     }
 
+    componentDidMount() {
+        const params = this.props.match.params
+        console.log(params)
+        this.service.findById(params.id)
+            .then(response => {
+                console.log(response.data)
+            })
+            .catch(error => {
+                messageError(error.response.data)
+            })
+    }
+
     handleChange = (event) => {
         const value = event.target.value
         const name = event.target.name

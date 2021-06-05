@@ -11,6 +11,10 @@ class LaunchService extends ApiService {
         return this.post('/', Launch)
     }
 
+    findById(id) {
+        return this.get(`/${id}`)
+    }
+
     search(LaunchFilter) {
         let params = `?year=${LaunchFilter.year}`
 
