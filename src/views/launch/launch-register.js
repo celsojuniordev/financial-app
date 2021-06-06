@@ -159,7 +159,7 @@ class LaunchRegister extends React.Component {
                                 disabled={true}
                                 name="status"
                                 onChange={this.handleChange}
-                                value={this.state.status} />
+                                value={this.state.updated ? this.state.status : 'PENDENTE'} />
                         </FormGroup>
                     </div>
 
@@ -170,10 +170,10 @@ class LaunchRegister extends React.Component {
                     <div className="col-md-6">
                         {
                             this.state.updated ? 
-                                ( <button className="btn btn-success" onClick={this.update} >Atualizar</button> ) : 
-                                ( <button className="btn btn-success" onClick={this.save} >Salvar</button> )
+                                ( <button className="btn btn-success" onClick={this.update} ><i className="pi pi-refresh"></i> Atualizar</button> ) : 
+                                ( <button className="btn btn-success" onClick={this.save} ><i className="pi pi-save"></i> Salvar</button> )
                         }
-                        <button className="btn btn-danger" onClick={e => this.props.history.push('/launch-search')} >Cancelar</button>
+                        <button className="btn btn-danger" onClick={e => this.props.history.push('/launch-search')} ><i className="pi pi-times"></i> Cancelar</button>
                     </div>
 
                 </div>

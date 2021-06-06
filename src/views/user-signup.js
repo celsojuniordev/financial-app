@@ -65,8 +65,8 @@ class UserSignup extends React.Component {
                             <FormGroup label="Confirmar senha: *" htmlFor="inputConfirmPassword">
                                 <input className="form-control" type="password" id="inputConfirmPassword" name="confirmPassword" onChange={e => this.setState({ confirmPassword: e.target.value })} />
                             </FormGroup>
-                            <button onClick={this.signup} className="btn btn-success">Salvar</button>
-                            <button onClick={this.cancel} className="btn btn-danger">Cancelar</button>
+                            <button onClick={this.signup} className="btn btn-success"><i className="pi pi-save"></i> Salvar</button>
+                            <button onClick={this.cancel} className="btn btn-danger"><i className="pi pi-times"></i> Cancelar</button>
                         </div>
                     </div>
                 </div>

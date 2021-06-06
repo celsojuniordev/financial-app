@@ -44,6 +44,9 @@ class LaunchSearch extends React.Component {
 
         this.service.search(launchFilter)
             .then(response => {
+                if(response.data.length < 1) {
+                    messages.messageWarning("Nenhum resultado encontrado")
+                }
                 this.setState({ launchs: response.data })
             }).catch(error => {
                 messages.messageError(error.data)
@@ -145,8 +148,8 @@ class LaunchSearch extends React.Component {
                                     onChange={e => this.setState({ type: e.target.value })} />
                             </FormGroup>
 
-                            <button onClick={this.search} type="button" className="btn btn-success">Buscar</button>
-                            <button onClick={this.form} type="button" className="btn btn-danger">Cadastrar</button>
+                            <button onClick={this.search} type="button" className="btn btn-success"><i className="pi pi-search"></i> Buscar </button>
+                            <button onClick={this.form} type="button" className="btn btn-danger"><i className="pi pi-plus"></i> Cadastrar </button>
 
                         </div>
                     </div>

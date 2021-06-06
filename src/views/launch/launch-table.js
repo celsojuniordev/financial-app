@@ -13,10 +13,10 @@ const rows = props.launchs.map(launch => {
             <td>{ launch.status }</td>
             <td>
 
-            <button onClick={e => props.updateStatus(launch, 'EFETIVADO')} type="button" className="btn btn-success">Efetivar</button>
-            <button onClick={e => props.updateStatus(launch, 'CANCELADO')} type="button" className="btn btn-warning">Cancelar</button>    
-            <button onClick={e => props.edit(launch.id)} type="button" className="btn btn-primary">Editar</button>
-            <button onClick={e => props.delete(launch)} type="button" className="btn btn-danger">Deletar</button>
+            <button title="Efetivar" disabled={launch.status !== 'PENDENTE'} onClick={e => props.updateStatus(launch, 'EFETIVADO')} type="button" className="btn btn-success"><i className="pi pi-check"></i></button>
+            <button title="Cancelar" disabled={launch.status !== 'PENDENTE'} onClick={e => props.updateStatus(launch, 'CANCELADO')} type="button" className="btn btn-warning"><i className="pi pi-times"></i></button>    
+            <button title="Editar" onClick={e => props.edit(launch.id)} type="button" className="btn btn-primary"><i className="pi pi-pencil"></i></button>
+            <button title="Deletar" onClick={e => props.delete(launch)} type="button" className="btn btn-danger"><i className="pi pi-trash"></i></button>
 
             </td>
         </tr>
