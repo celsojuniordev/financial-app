@@ -54,6 +54,21 @@ class LaunchSearch extends React.Component {
         this.props.history.push(`/launch-register/${id}`)
     }
 
+    updateStatus = (launch, status) => {
+        launch.status = status
+        this.service.update(launch)
+        .then(response => {
+            const launchs = this.state.launchs
+            const index = launchs.indexOf(launch)
+            
+            launchs[index] = launch
+            this.setState({ launch })
+            messages.messageSuccess("Status atualizado com sucesso")
+        }).catch(error => {
+            messages.messageError(error.data)
+        })
+    }
+
     delete = () => {
         this.service.deleteLaunch(this.state.launchDeleted.id)
             .then(response => {
@@ -140,7 +155,7 @@ class LaunchSearch extends React.Component {
                 <div className="row">
                     <div className="col-md-12">
                         <div className="bs-component">
-                            <LaunchTable launchs={this.state.launchs} delete={this.confirm} edit={this.edit} />
+                            <LaunchTable launchs={this.state.launchs} delete={this.confirm} edit={this.edit} updateStatus={this.updateStatus} />
                         </div>
                     </div>
                 </div>
