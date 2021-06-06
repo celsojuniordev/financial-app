@@ -1,16 +1,16 @@
 import React from 'react'
 import { Route, Switch, HashRouter, Redirect } from 'react-router-dom'
-import AuthService from '../app/service/auth-service'
 import Home from '../views/home'
 import launchRegister from '../views/launch/launch-register'
 import LaunchSearch from '../views/launch/launch-search'
 import Login from '../views/login'
 import UserSignup from '../views/user-signup'
+import { AuthConsumer } from './authenticate-provider'
 
-function AuthenticateRoute({ component: Component, ...props }) {
+function AuthenticateRoute({ component: Component, isUserAuthenticated, ...props }) {
     return(
         <Route {...props} render={ (componentProps) => {
-            if(AuthService.isUserAuthenticated()) {
+            if(isUserAuthenticated) {
                 return (
                     <Component {...componentProps} />
                 )
@@ -23,19 +23,27 @@ function AuthenticateRoute({ component: Component, ...props }) {
     )
 }
 
-function Routes() {
+function Routes(props) {
     return (
         <HashRouter>
             <Switch>
                 <Route path="/login" component={ Login } />
                 <Route path="/user-signup" component={ UserSignup } />
 
-                <AuthenticateRoute path="/home" component={ Home } />
-                <AuthenticateRoute path="/launch-search" component={ LaunchSearch } />
-                <AuthenticateRoute path="/launch-register/:id?" component={ launchRegister } />
+                <AuthenticateRoute isUserAuthenticated={props.isUserAuthenticated} path="/home" component={ Home } />
+                <AuthenticateRoute isUserAuthenticated={props.isUserAuthenticated} path="/launch-search" component={ LaunchSearch } />
+                <AuthenticateRoute isUserAuthenticated={props.isUserAuthenticated} path="/launch-register/:id?" component={ launchRegister } />
             </Switch>
         </HashRouter>
     )
 }
 
-export default Routes
+
+
+export default () => (
+    <AuthConsumer>
+        { (context) => (
+            <Routes isUserAuthenticated={context.isAuthenticated} />
+        ) }
+    </AuthConsumer>
+)
