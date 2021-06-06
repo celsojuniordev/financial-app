@@ -2,6 +2,7 @@ import React from 'react';
 import Routes from './routes'
 import NavBar from '../components/nav-bar';
 import { ToastContainer } from 'react-toastify'
+import AuthenticateProvider from './authenticate-provider'
 
 //css
 import '../custom.css';
@@ -16,13 +17,13 @@ class App extends React.Component {
 
   render() {
     return (
-      <>
+      <AuthenticateProvider>
         <ToastContainer />
         <NavBar />
         <div className="container">
           <Routes />
         </div>
-      </>
+      </AuthenticateProvider>
     )
   }
 }

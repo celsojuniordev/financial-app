@@ -1,6 +1,6 @@
 import React from 'react'
 import UserService from '../app/service/user-service'
-import LocalStorageService from '../app/service/local-storage-service'
+import { AuthContext } from '../main/authenticate-provider'
 
 class Home extends React.Component {
 
@@ -13,7 +13,7 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
-        const user = LocalStorageService.getItem('_user')
+        const user = this.context.userAuthenticated
         
         this.userService.getBalanceByUserId(user.id)
             .then( response => {
@@ -39,5 +39,7 @@ class Home extends React.Component {
         )
     }
 }
+
+Home.contextType = AuthContext
 
 export default Home
