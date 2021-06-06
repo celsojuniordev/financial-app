@@ -14,7 +14,7 @@ function Routes() {
                 <Route path="/user-signup" component={ UserSignup } />
                 <Route path="/home" component={ Home } />
                 <Route path="/launch-search" component={ LaunchSearch } />
-                <Route path="/launch-register/:id" component={ launchRegister } />
+                <Route path="/launch-register/:id?" component={ launchRegister } />
             </Switch>
         </HashRouter>
     )

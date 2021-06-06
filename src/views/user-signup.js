@@ -19,45 +19,18 @@ class UserSignup extends React.Component {
         confirmPassword: ''
     }
 
-
-    validate() {
-        const msg = []
-
-        if(!this.state.name) {
-            msg.push('Nome é obrigatório')
-        }
-
-        if(!this.state.email) {
-            msg.push('Email é obrigatório')
-        } else if(!this.state.email.match(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]/)) {
-            msg.push('Email inválido')
-        }
-
-        if(!this.state.password || !this.state.confirmPassword) {
-            msg.push('Senha é obrigatório')
-        } else if(this.state.password !== this.state.confirmPassword) {
-            msg.push('Confirmação de senha inválido')
-        }
-
-        return msg
-    }
-
-
     signup = () => {
-        const msgs = this.validate()
+        const { email, name, password, confirmPassword } = this.state
+        const user = { email, name, password, confirmPassword }
 
-        if(msgs.length > 0) {
-            msgs.forEach ( (msg, index) => {
+        try{
+            this.service.validate(user)
+        } catch(error) {
+            const messages = error.messages
+            messages.forEach( msg => {
                 messageError(msg)
             })
-
             return false
-        }
-
-        const user = {
-            email: this.state.email,
-            name: this.state.name,
-            password: this.state.password
         }
 
         this.service.signup(user)

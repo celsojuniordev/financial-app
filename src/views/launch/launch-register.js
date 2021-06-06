@@ -22,19 +22,23 @@ class LaunchRegister extends React.Component {
         month: '',
         year: '',
         type: '',
-        status: ''
+        status: '',
+        updated: false
     }
 
     componentDidMount() {
         const params = this.props.match.params
         console.log(params)
-        this.service.findById(params.id)
-            .then(response => {
-                console.log(response.data)
-            })
-            .catch(error => {
-                messageError(error.response.data)
-            })
+
+        if (params.id) {
+            this.service.findById(params.id)
+                .then(response => {
+                    this.setState({ ...response.data, updated: true })
+                })
+                .catch(error => {
+                    messageError(error.response.data)
+                })
+        }
     }
 
     handleChange = (event) => {
@@ -45,9 +49,20 @@ class LaunchRegister extends React.Component {
     }
 
     save = () => {
+
         const loggedUser = LocalStorageService.getItem('_user')
         const { description, value, month, year, type } = this.state
         const launch = { description, value, month, year, type, userId: loggedUser.id }
+        
+        try {
+            this.service.validate(launch)
+        } catch(error) {
+            const messages = error.messages
+            messages.forEach(msg => {
+                messageError(msg) 
+            })
+            return false
+        }
 
         this.service.save(launch)
             .then(response => {
@@ -58,7 +73,21 @@ class LaunchRegister extends React.Component {
             .catch(error => {
                 messageError(error.response.data)
             })
-        console.log(this.state)
+    }
+
+    update = () => {
+        const { description, value, month, year, type, status, id } = this.state
+        const launch = { description, value, month, year, type, status, id }
+
+        this.service.update(launch)
+            .then(response => {
+                messageSuccess('Atualizado com sucesso')
+                this.props.history.push('/launch-search')
+
+            })
+            .catch(error => {
+                messageError(error.response.data)
+            })
     }
 
     render() {
@@ -66,7 +95,7 @@ class LaunchRegister extends React.Component {
         const months = this.service.getMonths()
 
         return (
-            <Card title="Cadastrar lançamento">
+            <Card title={this.state.updated ? 'Atualizar lançamento' : 'Cadastro de lançamento'}>
                 <div className="row">
                     <div className="col-md-12">
                         <FormGroup htmlFor="inputDescription" label="Descrição: *">
@@ -129,7 +158,8 @@ class LaunchRegister extends React.Component {
                                 type="text"
                                 disabled={true}
                                 name="status"
-                                onChange={this.handleChange} />
+                                onChange={this.handleChange}
+                                value={this.state.status} />
                         </FormGroup>
                     </div>
 
@@ -137,8 +167,12 @@ class LaunchRegister extends React.Component {
 
                 </div>
                 <div className="row">
-                    <div>
-                        <button className="btn btn-success" onClick={this.save} >Salvar</button>
+                    <div className="col-md-6">
+                        {
+                            this.state.updated ? 
+                                ( <button className="btn btn-success" onClick={this.update} >Atualizar</button> ) : 
+                                ( <button className="btn btn-success" onClick={this.save} >Salvar</button> )
+                        }
                         <button className="btn btn-danger" onClick={e => this.props.history.push('/launch-search')} >Cancelar</button>
                     </div>
 

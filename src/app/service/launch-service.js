@@ -1,5 +1,5 @@
 import ApiService from "../apiservice";
-
+import ValidationError from "../exception/validation-error"
 class LaunchService extends ApiService {
 
 
@@ -13,6 +13,10 @@ class LaunchService extends ApiService {
 
     findById(id) {
         return this.get(`/${id}`)
+    }
+
+    update(launch) {
+        return this.put(`/${launch.id}`, launch)
     }
 
     search(LaunchFilter) {
@@ -62,6 +66,30 @@ class LaunchService extends ApiService {
             { label: 'Receita', value: 'RECEITA' },
             { label: 'Despesa', value: 'DESPESA' }
         ]
+    }
+
+    validate(launch) {
+        const errors = []
+        
+        if(!launch.description) {
+            errors.push("Descrição é obrigatório")
+        }
+        if(!launch.value) {
+            errors.push("Valor é obrigatório")
+        }
+        if(!launch.month) {
+            errors.push("Mês é obrigatório")
+        }
+        if(!launch.type) {
+            errors.push("Tipo é obrigatório")
+        }
+        if(!launch.year) {
+            errors.push("Ano é obrigatório")
+        }
+
+        if(errors) {
+            throw new ValidationError(errors)
+        }
     }
 
 }
